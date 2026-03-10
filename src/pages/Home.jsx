@@ -49,7 +49,7 @@ export default function Home() {
             />
           </BottomSheet>
 
-          <BottomDock setActiveTab={setActiveTab} />
+          <BottomDock activeTab={activeTab} setActiveTab={setActiveTab} />
         </div>
       </main>
 
