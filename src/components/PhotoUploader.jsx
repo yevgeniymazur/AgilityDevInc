@@ -6,27 +6,22 @@ PhotoUploader Component
 
 PURPOSE
 - Allows a user to select an image and upload it.
-- This component handles UI interaction only.
-- The actual upload logic is handled by photoService.js.
-
-CURRENT STATE
-- uploadPhotoFile() is currently a stub/demo implementation.
-- A teammate will replace the stub with real Firebase Storage logic.
+- This component handles the upload UI only.
+- The actual storage logic is handled by photoService.js.
 */
 
 export default function PhotoUploader({ userId, folderId, onUploaded }) {
-
   // Stores the selected file before upload
   const [file, setFile] = useState(null);
 
-  // Displays status messages (uploading, success, errors)
+  // Displays upload progress, success, or error messages
   const [status, setStatus] = useState("");
 
   /*
   Handles the upload process when the form is submitted.
   - Validates a file is selected
   - Calls the upload service
-  - Returns the uploaded file data to the parent component
+  - Sends uploaded file data back to the parent component
   */
   async function handleUpload(e) {
     e.preventDefault();
@@ -38,23 +33,21 @@ export default function PhotoUploader({ userId, folderId, onUploaded }) {
       return;
     }
 
-    setStatus("Uploading (demo stub)...");
+    setStatus("Uploading photo...");
 
     try {
-      /*
-      Call the upload service.
-      In the final implementation this will upload the file
-      to Firebase Storage and return metadata.
-      */
+      // Upload the file and return metadata from the service
       const result = await uploadPhotoFile({ file, userId, folderId });
 
       // Notify parent component that upload completed
-      onUploaded(result);
+      if (onUploaded) {
+        onUploaded(result);
+      }
 
-      // Reset file input
+      // Reset selected file after successful upload
       setFile(null);
 
-      setStatus("Uploaded (stub). Real storage will be added by teammate.");
+      setStatus("Photo uploaded successfully.");
     } catch (err) {
       setStatus(err.message);
     }
@@ -62,7 +55,6 @@ export default function PhotoUploader({ userId, folderId, onUploaded }) {
 
   return (
     <form onSubmit={handleUpload} aria-describedby="upload-help">
-
       {/* File selector for image uploads */}
       <label htmlFor="photoFile">Photo file</label>
       <input
@@ -78,25 +70,23 @@ export default function PhotoUploader({ userId, folderId, onUploaded }) {
           Upload photo
         </button>
 
-        {/* Clears selected file */}
+        {/* Clears the selected file */}
         <button type="button" onClick={() => setFile(null)}>
           Clear
         </button>
       </div>
 
-      {/* Developer note indicating upload logic still needs implementation */}
+      {/* Helper text for the uploader */}
       <p id="upload-help" style={{ fontSize: 12, marginTop: 10 }}>
-        <span className="badge">TODO</span>{" "}
-        Teammate: implement real upload in <code>src/services/photoService.js</code>.
+        Uploaded files are stored in Firebase Storage.
       </p>
 
-      {/* Status message area (success/errors) */}
+      {/* Status message area for upload feedback */}
       {status && (
         <p role="status" aria-live="polite" style={{ marginTop: 10 }}>
           {status}
         </p>
       )}
-
     </form>
   );
 }
