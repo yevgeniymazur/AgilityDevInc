@@ -345,3 +345,194 @@ html, body, #root {
   max-width: 520px;
   margin: 0 auto;
 }
+
+
+
+/* Main page shell */
+.home-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+
+  padding: 36px 18px 12px; 
+}
+
+/* Top area */
+.topbar {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 72px;
+  margin-bottom: 12px;
+}
+
+.brand-wrap {
+  text-align: center;
+  pointer-events: none;
+}
+
+.brand-title {
+  margin: 0;
+  font-size: clamp(2rem, 4vw, 3rem);
+  line-height: 1.1;
+}
+
+.brand-subtitle {
+  margin: 6px 0 0;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+/* Small account info in top-right */
+.account-mini {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: grid;
+  gap: 4px;
+  justify-items: end;
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+.account-email {
+  max-width: 220px;
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+
+.account-logout {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  border-radius: 999px;
+  padding: 4px 10px;
+  cursor: pointer;
+  font-size: 0.78rem;
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+.account-logout:hover,
+.account-logout:focus-visible {
+  color: var(--text);
+  border-color: var(--text);
+}
+
+/* Main globe stage */
+.main-stage {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 0;
+}
+
+/* Globe remains the focal point */
+.globe-wrap {
+  min-height: 74vh;
+  height: 100%;
+  border-radius: 24px;
+  overflow: hidden;
+}
+
+/* Bottom controls area */
+.dock-area {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 28px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  gap: 18px;
+  z-index: 5;
+}
+
+/* Floating menu button */
+.menu-toggle {
+  background: rgba(12, 18, 32, 0.82);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 12px 22px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.24);
+  transition: transform 0.2s ease, border-color 0.2s ease;
+  margin: 0;
+}
+
+.menu-toggle:hover,
+.menu-toggle:focus-visible {
+  transform: translateY(-1px);
+  border-color: var(--text);
+}
+
+/* Expanding sheet */
+.sheet {
+  width: min(1100px, calc(100vw - 32px));
+  max-height: 42vh;
+  overflow: auto;
+  margin: 0 auto;
+  animation: sheetUp 0.25s ease;
+}
+
+@keyframes sheetUp {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Footer */
+.trademark {
+  margin-top: 10px;
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+/* Mobile adjustments */
+@media (max-width: 900px) {
+  .topbar {
+    justify-content: center;
+    min-height: 110px;
+  }
+
+  .account-mini {
+    position: static;
+    margin-top: 12px;
+    justify-items: center;
+    text-align: center;
+  }
+
+  .brand-wrap {
+    width: 100%;
+  }
+
+  .globe-wrap {
+    min-height: 62vh;
+  }
+
+  .dock-area {
+    position: static;
+    margin-top: 14px;
+  }
+
+  .sheet {
+    width: 100%;
+    max-height: none;
+  }
+}

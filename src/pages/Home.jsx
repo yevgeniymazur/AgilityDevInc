@@ -3,7 +3,6 @@ import { auth } from "../firebase";
 import { signOut } from "firebase/auth";
 
 import GlobePanel from "../components/GlobePanel";
-import BottomDock from "../components/BottomDock";
 import BottomSheet from "../components/BottomSheet";
 import HomeTabs from "../components/HomeTabs";
 
@@ -11,43 +10,36 @@ export default function Home() {
   // Current authenticated user from Firebase
   const user = auth.currentUser;
 
-  /*
-  Controls which bottom dock tab is active.
-  Example tabs: Trips, Map, Photos, etc.
-  */
+  // Controls which tab is active inside the sheet
   const [activeTab, setActiveTab] = useState("trips");
 
-  /*
-  Tracks which travel folder is currently selected.
-  This allows the UI to show folder contents in the tab view.
-  */
+  // Tracks which trip folder is selected
   const [selectedFolder, setSelectedFolder] = useState(null);
 
+  // Controls whether the bottom sheet is open
+  const [menuOpen, setMenuOpen] = useState(false);
+
   return (
-    <div className="container">
+    <div className="home-shell">
+      {/* Accessibility link for keyboard users */}
+      <a className="skip-link" href="#main">
+        Skip to content
+      </a>
 
-      {/* Accessibility link allowing keyboard users to skip navigation */}
-      <a className="skip-link" href="#main">Skip to content</a>
-
-      {/* Top header with app title and authentication info */}
-      <header className="header card" role="banner">
-        <div>
-          <h1>Wanderloom</h1>
-          <span className="badge">Orbit UI</span>
+      {/* Top brand area */}
+      <header className="topbar" role="banner">
+        <div className="brand-wrap">
+          <h1 className="brand-title">Wanderloom</h1>
+          <p className="brand-subtitle">Explore the world through memory</p>
         </div>
 
-        {/* User info and logout button */}
-        <div style={{ display: "grid", gap: 6, justifyItems: "end" }}>
-          <div style={{ fontSize: 13, color: "var(--muted)" }}>
-            Signed in as{" "}
-            <strong style={{ color: "var(--text)" }}>
-              {user?.email || user?.displayName}
-            </strong>
+        {/* Minimal account info in top-right corner */}
+        <div className="account-mini" aria-label="Account information">
+          <div className="account-email">
+            {user?.email || user?.displayName || "Signed in"}
           </div>
-
-          {/* Firebase logout button */}
           <button
-            className="primary"
+            className="account-logout"
             type="button"
             onClick={() => signOut(auth)}
           >
@@ -56,33 +48,32 @@ export default function Home() {
         </div>
       </header>
 
-      {/* Main application content */}
-      <main id="main" role="main" style={{ marginTop: 16, flex: 1 }}>
-
-        {/* Interactive globe or map panel */}
+      {/* Main stage keeps the globe as the focal point */}
+      <main id="main" className="main-stage" role="main">
         <GlobePanel />
 
-        {/* Bottom navigation dock and sliding content panel */}
-        <div className="dock-area" style={{ marginTop: 14 }}>
+        <div className="dock-area">
+          {/* Expanding menu sheet */}
+          {menuOpen && (
+            <BottomSheet activeTab={activeTab} setActiveTab={setActiveTab}>
+              <HomeTabs
+                activeTab={activeTab}
+                selectedFolder={selectedFolder}
+                setSelectedFolder={setSelectedFolder}
+              />
+            </BottomSheet>
+          )}
 
-          {/* BottomSheet holds the content area controlled by tabs */}
-          <BottomSheet activeTab={activeTab} setActiveTab={setActiveTab}>
-
-            {/* HomeTabs renders tab-specific content such as trip folders */}
-            <HomeTabs
-              activeTab={activeTab}
-              selectedFolder={selectedFolder}
-              setSelectedFolder={setSelectedFolder}
-            />
-
-          </BottomSheet>
-
-          {/* BottomDock is the main navigation bar for switching tabs */}
-          <BottomDock
-            activeTab={activeTab}
-            setActiveTab={setActiveTab}
-          />
-
+          {/* Single floating menu button */}
+          <button
+            className="menu-toggle"
+            type="button"
+            onClick={() => setMenuOpen((prev) => !prev)}
+            aria-expanded={menuOpen}
+            aria-controls="wanderloom-sheet"
+          >
+            {menuOpen ? "Close" : "Menu"}
+          </button>
         </div>
       </main>
 
@@ -90,7 +81,6 @@ export default function Home() {
       <div className="trademark">
         AgilityDevInc™ • Accessible by Design
       </div>
-
     </div>
   );
 }
