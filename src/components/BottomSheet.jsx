@@ -1,3 +1,11 @@
+/*
+BottomSheet Component
+
+PURPOSE
+- Displays the expandable bottom panel used for main navigation content.
+- Contains the tab buttons and the active tab content.
+*/
+
 export default function BottomSheet({ activeTab, setActiveTab, children }) {
   const tabs = [
     { id: "trips", label: "Trips" },
@@ -7,9 +15,14 @@ export default function BottomSheet({ activeTab, setActiveTab, children }) {
   ];
 
   return (
-    <div className="sheet" aria-label="Quick actions panel">
+    <div
+      id="wanderloom-sheet"
+      className="sheet"
+      aria-label="Quick actions panel"
+    >
       <div className="sheet-inner">
         <div className="card">
+          {/* Tab navigation bar */}
           <div className="tabbar" role="tablist" aria-label="Home tabs">
             {tabs.map((t) => (
               <button
@@ -24,11 +37,13 @@ export default function BottomSheet({ activeTab, setActiveTab, children }) {
             ))}
           </div>
 
+          {/* Active tab content */}
           <div role="tabpanel">{children}</div>
 
+          {/* Accessibility note */}
           <p style={{ fontSize: 12, marginTop: 12, marginBottom: 0 }}>
             <span className="badge">ADA</span>{" "}
-            Panel opens on hover or keyboard focus. Press Tab to enter.
+            Menu is keyboard accessible and can be opened with Enter or Space.
           </p>
         </div>
       </div>

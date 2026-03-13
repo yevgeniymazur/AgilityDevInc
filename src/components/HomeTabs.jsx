@@ -3,34 +3,38 @@ import PhotoPanel from "./PhotoPanel";
 import PhotoUploader from "./PhotoUploader";
 import { auth } from "../firebase";
 
-/**
- * HomeTabs
- *
- * Controls the content shown inside the bottom sheet tabs.
- *
- * Tabs:
- *  - Trips   -> folders + photo manager
- *  - Pins    -> placeholder for globe pins
- *  - Upload  -> photo uploader
- *  - Profile -> account info
- *
- * Layout notes:
- *  - Folder column scrolls independently
- *  - Sheet height remains stable
- *  - Ready for Firebase + Mapbox integration
- */
+/*
+HomeTabs Component
+
+PURPOSE
+- Controls which content is shown inside the bottom sheet area.
+- Each tab displays a different part of the Wanderloom UI.
+
+TABS
+- Trips   -> folder list and selected trip content
+- Pins    -> placeholder for map pin data
+- Upload  -> standalone upload panel
+- Profile -> signed-in user information and future settings
+
+LAYOUT NOTES
+- The Trips tab uses a two-column layout
+- Folder list stays separate from selected folder content
+- Built to expand later with Firebase and map integration
+*/
 
 export default function HomeTabs({
   activeTab,
   selectedFolder,
   setSelectedFolder
 }) {
+  // Current logged-in Firebase user
   const user = auth.currentUser;
 
   /* =========================
      TRIPS TAB
+     Shows trip folders on the left
+     and selected trip content on the right
      ========================= */
-
   if (activeTab === "trips") {
     return (
       <div
@@ -41,7 +45,7 @@ export default function HomeTabs({
           alignItems: "start"
         }}
       >
-        {/* LEFT: Folder List */}
+        {/* Left panel: folder list for selecting a trip */}
         <div className="card scroll-panel">
           <h3 style={{ marginTop: 0 }}>Trips</h3>
 
@@ -54,13 +58,14 @@ export default function HomeTabs({
             onSelectFolder={setSelectedFolder}
           />
 
+          {/* Accessibility note for keyboard navigation */}
           <p style={{ fontSize: 12, marginTop: 12 }}>
             <span className="badge">ADA</span>{" "}
             Buttons are keyboard accessible with visible focus.
           </p>
         </div>
 
-        {/* RIGHT: Folder Content */}
+        {/* Right panel: selected folder details and photo tools */}
         <div className="card">
           {!selectedFolder ? (
             <>
@@ -87,6 +92,7 @@ export default function HomeTabs({
                 Manage photos and pins for this trip.
               </p>
 
+              {/* PhotoPanel handles uploads, captions, and coordinates */}
               <PhotoPanel
                 userId={user?.uid}
                 folder={selectedFolder}
@@ -100,8 +106,8 @@ export default function HomeTabs({
 
   /* =========================
      PINS TAB
+     Placeholder for future globe pin integration
      ========================= */
-
   if (activeTab === "pins") {
     return (
       <div>
@@ -122,7 +128,8 @@ export default function HomeTabs({
             Expected data format:
           </p>
 
-<pre style={{ fontSize: 12 }}>
+          {/* Example structure for future pin documents */}
+          <pre style={{ fontSize: 12 }}>
 {`{
   id: string
   lat: number
@@ -130,7 +137,7 @@ export default function HomeTabs({
   caption: string
   imageUrl: string
 }`}
-</pre>
+          </pre>
         </div>
       </div>
     );
@@ -138,8 +145,8 @@ export default function HomeTabs({
 
   /* =========================
      UPLOAD TAB
+     Standalone uploader for quick photo uploads
      ========================= */
-
   if (activeTab === "upload") {
     return (
       <div>
@@ -169,8 +176,8 @@ export default function HomeTabs({
 
   /* =========================
      PROFILE TAB
+     Displays signed-in user info and future settings
      ========================= */
-
   return (
     <div>
       <h3 style={{ marginTop: 0 }}>Profile</h3>

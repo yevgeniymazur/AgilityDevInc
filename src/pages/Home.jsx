@@ -3,56 +3,81 @@ import { auth } from "../firebase";
 import { signOut } from "firebase/auth";
 
 import GlobePanel from "../components/GlobePanel";
-import BottomDock from "../components/BottomDock";
 import BottomSheet from "../components/BottomSheet";
 import HomeTabs from "../components/HomeTabs";
 
 export default function Home() {
+  // Current authenticated user from Firebase
   const user = auth.currentUser;
 
+  // Controls which tab is active inside the sheet
   const [activeTab, setActiveTab] = useState("trips");
+
+  // Tracks which trip folder is selected
   const [selectedFolder, setSelectedFolder] = useState(null);
 
-  return (
-    <div className="container">
-      <a className="skip-link" href="#main">Skip to content</a>
+  // Controls whether the bottom sheet is open
+  const [menuOpen, setMenuOpen] = useState(false);
 
-      <header className="header card" role="banner">
-        <div>
-          <h1>Wanderloom</h1>
-          <span className="badge">Orbit UI</span>
+  return (
+    <div className="home-shell">
+      {/* Accessibility link for keyboard users */}
+      <a className="skip-link" href="#main">
+        Skip to content
+      </a>
+
+      {/* Top brand area */}
+      <header className="topbar" role="banner">
+        <div className="brand-wrap">
+          <h1 className="brand-title">Wanderloom</h1>
+          <p className="brand-subtitle">Explore the world through memory</p>
         </div>
 
-        <div style={{ display: "grid", gap: 6, justifyItems: "end" }}>
-          <div style={{ fontSize: 13, color: "var(--muted)" }}>
-            Signed in as{" "}
-            <strong style={{ color: "var(--text)" }}>
-              {user?.email || user?.displayName}
-            </strong>
+        {/* Minimal account info in top-right corner */}
+        <div className="account-mini" aria-label="Account information">
+          <div className="account-email">
+            {user?.email || user?.displayName || "Signed in"}
           </div>
-          <button className="primary" type="button" onClick={() => signOut(auth)}>
+          <button
+            className="account-logout"
+            type="button"
+            onClick={() => signOut(auth)}
+          >
             Logout
           </button>
         </div>
       </header>
 
-      <main id="main" role="main" style={{ marginTop: 16, flex: 1 }}>
+      {/* Main stage keeps the globe as the focal point */}
+      <main id="main" className="main-stage" role="main">
         <GlobePanel />
 
-        {/* Dock + Sheet area */}
-        <div className="dock-area" style={{ marginTop: 14 }}>
-          <BottomSheet activeTab={activeTab} setActiveTab={setActiveTab}>
-            <HomeTabs
-              activeTab={activeTab}
-              selectedFolder={selectedFolder}
-              setSelectedFolder={setSelectedFolder}
-            />
-          </BottomSheet>
+        <div className="dock-area">
+          {/* Expanding menu sheet */}
+          {menuOpen && (
+            <BottomSheet activeTab={activeTab} setActiveTab={setActiveTab}>
+              <HomeTabs
+                activeTab={activeTab}
+                selectedFolder={selectedFolder}
+                setSelectedFolder={setSelectedFolder}
+              />
+            </BottomSheet>
+          )}
 
-          <BottomDock activeTab={activeTab} setActiveTab={setActiveTab} />
+          {/* Single floating menu button */}
+          <button
+            className="menu-toggle"
+            type="button"
+            onClick={() => setMenuOpen((prev) => !prev)}
+            aria-expanded={menuOpen}
+            aria-controls="wanderloom-sheet"
+          >
+            {menuOpen ? "Close" : "Menu"}
+          </button>
         </div>
       </main>
 
+      {/* Footer branding */}
       <div className="trademark">
         AgilityDevInc™ • Accessible by Design
       </div>

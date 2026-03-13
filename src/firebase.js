@@ -7,7 +7,7 @@ const firebaseConfig = {
   apiKey: "AIzaSyDUgRx8C1LikCIzWnbQTjE1VggJP68Ox8k",
   authDomain: "wanderloom-5339a.firebaseapp.com",
   projectId: "wanderloom-5339a",
-  storageBucket: "wanderloom-5339a.appspot.com",
+  storageBucket: "wanderloom-5339a.firebasestorage.app",
   messagingSenderId: "596669595366",
   appId: "1:596669595366:web:66a9d882213dcc6a9dc527",
 };
