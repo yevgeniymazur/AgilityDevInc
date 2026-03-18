@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { uploadPhotoFile } from "../services/photoService";
+import { savePhotoMetadata } from "../services/photoMetadataService";
 
 /*
 PhotoUploader Component
@@ -36,8 +37,20 @@ export default function PhotoUploader({ userId, folderId, onUploaded }) {
     setStatus("Uploading photo...");
 
     try {
+      // Step 1: Upload file to Firebase Storage
       // Upload the file and return metadata from the service
       const result = await uploadPhotoFile({ file, userId, folderId });
+
+      //Step 2: Save photo metadata to Firestore
+      await savePhotoMetadata({
+        userId,
+        folderId,
+        caption: "", // Placeholder for now, can be extended to include a caption input
+        lat: null, // Placeholder for geotagging, can be extended to include location data
+        lng: null, // Placeholder for geotagging, can be extended to include location data
+        imageUrl: result.imageUrl,
+        storagePath: result.storagePath,
+      });
 
       // Notify parent component that upload completed
       if (onUploaded) {
@@ -47,7 +60,7 @@ export default function PhotoUploader({ userId, folderId, onUploaded }) {
       // Reset selected file after successful upload
       setFile(null);
 
-      setStatus("Photo uploaded successfully.");
+      setStatus("Photo uploaded and metadata saved successfully.");
     } catch (err) {
       setStatus(err.message);
     }
