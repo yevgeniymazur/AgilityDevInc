@@ -1,207 +1,290 @@
+import { useEffect, useState } from "react";
 import FolderList from "./FolderList";
 import PhotoPanel from "./PhotoPanel";
 import PhotoUploader from "./PhotoUploader";
-import { auth } from "../firebase";
-
-/*
-HomeTabs Component
-
-PURPOSE
-- Controls which content is shown inside the bottom sheet area.
-- Each tab displays a different part of the Wanderloom UI.
-
-TABS
-- Trips   -> folder list and selected trip content
-- Pins    -> placeholder for map pin data
-- Upload  -> standalone upload panel
-- Profile -> signed-in user information and future settings
-
-LAYOUT NOTES
-- The Trips tab uses a two-column layout
-- Folder list stays separate from selected folder content
-- Built to expand later with Firebase and map integration
-*/
+import { auth, db, storage } from "../firebase";
+import { doc, getDoc, setDoc } from "firebase/firestore";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { onAuthStateChanged } from "firebase/auth";
 
 export default function HomeTabs({
   activeTab,
   selectedFolder,
   setSelectedFolder
 }) {
-  // Current logged-in Firebase user
-  const user = auth.currentUser;
 
-  /* =========================
-     TRIPS TAB
-     Shows trip folders on the left
-     and selected trip content on the right
-     ========================= */
+  // current logged in user
+  const [user, setUser] = useState(null);
+
+  // profile data from Firestore
+  const [profile, setProfile] = useState(null);
+
+  // toggle edit mode
+  const [isEditing, setIsEditing] = useState(false);
+
+  // holds selected image file before upload
+  const [avatarFile, setAvatarFile] = useState(null);
+
+  // listen for login/logout
+  useEffect(() => {
+    const unsub = onAuthStateChanged(auth, (u) => {
+      setUser(u);
+    });
+    return () => unsub();
+  }, []);
+
+  // load user profile from Firestore
+  useEffect(() => {
+    if (!user) return;
+
+    const loadProfile = async () => {
+      const refDoc = doc(db, "users", user.uid);
+      const snap = await getDoc(refDoc);
+
+      if (snap.exists()) {
+        setProfile(snap.data());
+      } else {
+        // default profile if none exists
+        setProfile({
+          displayName: "",
+          avatarUrl: "",
+          defaultMapView: "globe",
+          publicProfile: false
+        });
+      }
+    };
+
+    loadProfile();
+  }, [user]);
+
+  // handle selecting a new profile picture
+  const handleAvatarChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    setAvatarFile(file);
+
+    // preview image locally (before upload)
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setProfile((prev) => ({
+        ...prev,
+        avatarUrl: reader.result
+      }));
+    };
+    reader.readAsDataURL(file);
+  };
+
+  // save profile (upload image + save to Firestore)
+  const handleSave = async () => {
+    if (!user || !profile) return;
+
+    let avatarUrl = profile.avatarUrl || "";
+
+    // upload image to Firebase Storage if new file selected
+    if (avatarFile) {
+      const storageRef = ref(storage, `avatars/${user.uid}`);
+
+      await uploadBytes(storageRef, avatarFile);
+      avatarUrl = await getDownloadURL(storageRef);
+    }
+
+    // save profile data to Firestore
+    await setDoc(
+      doc(db, "users", user.uid),
+      {
+        displayName: profile.displayName || "",
+        avatarUrl,
+        defaultMapView: profile.defaultMapView || "globe",
+        publicProfile: profile.publicProfile || false
+      },
+      { merge: true }
+    );
+
+    // update UI with saved image
+    setProfile((prev) => ({
+      ...prev,
+      avatarUrl
+    }));
+
+    setAvatarFile(null);
+    setIsEditing(false);
+  };
+
+  // TRIPS TAB
   if (activeTab === "trips") {
     return (
-      <div
-        className="grid"
-        style={{
-          gridTemplateColumns: "360px 1fr",
-          gap: 16,
-          alignItems: "start"
-        }}
-      >
-        {/* Left panel: folder list for selecting a trip */}
-        <div className="card scroll-panel">
-          <h3 style={{ marginTop: 0 }}>Trips</h3>
+      <div className="grid" style={{ gridTemplateColumns: "360px 1fr", gap: 16 }}>
+        <div className="card">
+          <h3>Trips</h3>
 
-          <p style={{ fontSize: 13, color: "var(--muted)" }}>
-            Organize travel photos by trip folder.
-          </p>
-
+          {/* list of folders */}
           <FolderList
             userId={user?.uid}
             onSelectFolder={setSelectedFolder}
           />
-
-          {/* Accessibility note for keyboard navigation */}
-          <p style={{ fontSize: 12, marginTop: 12 }}>
-            <span className="badge">ADA</span>{" "}
-            Buttons are keyboard accessible with visible focus.
-          </p>
         </div>
 
-        {/* Right panel: selected folder details and photo tools */}
         <div className="card">
+          {/* show selected folder content */}
           {!selectedFolder ? (
-            <>
-              <h3 style={{ marginTop: 0 }}>Select a Trip</h3>
-
-              <p>
-                Choose a folder on the left to manage photos and future
-                globe pins.
-              </p>
-
-              <p style={{ fontSize: 12 }}>
-                <span className="badge">TODO</span>{" "}
-                This panel will later show photos, metadata, and pin
-                locations for the selected trip.
-              </p>
-            </>
+            <p>Select a trip</p>
           ) : (
-            <>
-              <h3 style={{ marginTop: 0 }}>
-                {selectedFolder.name}
-              </h3>
-
-              <p style={{ fontSize: 13, color: "var(--muted)" }}>
-                Manage photos and pins for this trip.
-              </p>
-
-              {/* PhotoPanel handles uploads, captions, and coordinates */}
-              <PhotoPanel
-                userId={user?.uid}
-                folder={selectedFolder}
-              />
-            </>
+            <PhotoPanel
+              userId={user?.uid}
+              folder={selectedFolder}
+            />
           )}
         </div>
       </div>
     );
   }
 
-  /* =========================
-     PINS TAB
-     Placeholder for future globe pin integration
-     ========================= */
+  // PINS TAB (placeholder)
   if (activeTab === "pins") {
     return (
       <div>
-        <h3 style={{ marginTop: 0 }}>Pins</h3>
-
-        <p>
-          Pins represent locations tied to uploaded photos.
-        </p>
-
-        <div className="card" style={{ marginTop: 10 }}>
-          <p style={{ marginBottom: 0 }}>
-            <span className="badge">TODO</span>{" "}
-            Teammate will connect Firestore pin data and display
-            pins on the globe.
-          </p>
-
-          <p style={{ fontSize: 12 }}>
-            Expected data format:
-          </p>
-
-          {/* Example structure for future pin documents */}
-          <pre style={{ fontSize: 12 }}>
-{`{
-  id: string
-  lat: number
-  lng: number
-  caption: string
-  imageUrl: string
-}`}
-          </pre>
+        <h3>Pins</h3>
+        <div className="card">
+          <p>Pin data will show here</p>
         </div>
       </div>
     );
   }
 
-  /* =========================
-     UPLOAD TAB
-     Standalone uploader for quick photo uploads
-     ========================= */
+  // UPLOAD TAB
   if (activeTab === "upload") {
     return (
       <div>
-        <h3 style={{ marginTop: 0 }}>Upload</h3>
-
-        <p>
-          Upload photos for your trips. These can later become
-          globe pins.
-        </p>
-
-        <div className="card" style={{ marginTop: 10 }}>
+        <h3>Upload</h3>
+        <div className="card">
           <PhotoUploader
             userId={user?.uid}
-            folderId={selectedFolder?.id || "no-folder-selected"}
+            folderId={selectedFolder?.id || "none"}
             onUploaded={() => {}}
           />
-
-          <p style={{ fontSize: 12 }}>
-            <span className="badge">TODO</span>{" "}
-            Replace stub upload with Firebase Storage integration
-            in <code>services/photoService.js</code>.
-          </p>
         </div>
       </div>
     );
   }
 
-  /* =========================
-     PROFILE TAB
-     Displays signed-in user info and future settings
-     ========================= */
+  // PROFILE TAB
   return (
     <div>
-      <h3 style={{ marginTop: 0 }}>Profile</h3>
+      <h3>Profile</h3>
 
-      <p style={{ marginBottom: 6 }}>
-        Signed in as:
-      </p>
-
+      <p>Signed in as:</p>
       <p style={{ fontWeight: "bold" }}>
         {user?.email || "Unknown User"}
       </p>
 
-      <div className="card" style={{ marginTop: 10 }}>
-        <p style={{ marginBottom: 0 }}>
-          <span className="badge">TODO</span>{" "}
-          Future settings:
-        </p>
+      <div className="card">
 
-        <ul style={{ marginTop: 8 }}>
-          <li>Display name</li>
-          <li>Avatar</li>
-          <li>Default map view</li>
-          <li>Privacy settings</li>
-        </ul>
+        {/* loading state */}
+        {!profile ? (
+          <p>Loading profile...</p>
+
+        // VIEW MODE
+        ) : !isEditing ? (
+          <>
+            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+              {profile.avatarUrl && (
+                <img
+                  src={profile.avatarUrl}
+                  alt="avatar"
+                  width={60}
+                  style={{ borderRadius: "50%" }}
+                />
+              )}
+
+              <h4 style={{ margin: 0 }}>
+                {profile.displayName || "No name set"}
+              </h4>
+            </div>
+
+            {/* edit button */}
+            <button
+              style={{ marginTop: 12 }}
+              onClick={() => setIsEditing(true)}
+            >
+              Edit Profile
+            </button>
+          </>
+
+        // EDIT MODE
+        ) : (
+          <>
+            <label>Display Name</label>
+            <input
+              style={{ width: "100%", marginBottom: 8 }}
+              value={profile.displayName}
+              onChange={(e) =>
+                setProfile({ ...profile, displayName: e.target.value })
+              }
+            />
+
+            <label>Profile Picture</label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleAvatarChange}
+            />
+
+            {/* preview image */}
+            {profile.avatarUrl && (
+              <img
+                src={profile.avatarUrl}
+                alt="avatar"
+                width={80}
+                style={{ borderRadius: 8, marginTop: 10 }}
+              />
+            )}
+
+            <label>Default View</label>
+            <select
+              style={{ width: "100%", marginBottom: 8 }}
+              value={profile.defaultMapView}
+              onChange={(e) =>
+                setProfile({
+                  ...profile,
+                  defaultMapView: e.target.value
+                })
+              }
+            >
+              <option value="globe">Globe</option>
+              <option value="trips">Trips</option>
+              <option value="pins">Pins</option>
+            </select>
+
+            <label>
+              <input
+                type="checkbox"
+                checked={profile.publicProfile}
+                onChange={(e) =>
+                  setProfile({
+                    ...profile,
+                    publicProfile: e.target.checked
+                  })
+                }
+              />
+              Public Profile
+            </label>
+
+            <div style={{ marginTop: 12 }}>
+              <button onClick={handleSave}>Save</button>
+
+              <button
+                style={{ marginLeft: 8 }}
+                onClick={() => {
+                  setAvatarFile(null);
+                  setIsEditing(false);
+                }}
+              >
+                Cancel
+              </button>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
