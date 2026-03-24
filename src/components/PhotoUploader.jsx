@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { uploadPhotoFile } from "../services/photoService";
 import { savePhotoMetadata } from "../services/photoMetadataService";
+import exifr from "exifr";
 
 /*
 PhotoUploader Component
@@ -34,10 +35,23 @@ export default function PhotoUploader({ userId, folderId, onUploaded }) {
       return;
     }
 
+    //validate file type. 
+    // In future iterations support more formats, implement more security, implement image processing, 
+    // and export this logic to a separate service
+    if (!file.name.endsWith(".jpg") && !file.name.endsWith(".jpeg")) {
+      setStatus("Only JPG/JPEG files are supported.");
+      return;
+    }
+
     setStatus("Uploading photo...");
 
     try {
-      // Step 1: Upload file to Firebase Storage
+      // Step 1: Extract GPS coordinates from photo metadata
+      const gps = await exifr.gps(file);
+      const lat = gps?.latitude ?? null;
+      const lng = gps?.longitude ?? null;
+
+      // Step 2: Upload file to Firebase Storage
       // Upload the file and return metadata from the service
       const result = await uploadPhotoFile({ file, userId, folderId });
 
@@ -46,8 +60,8 @@ export default function PhotoUploader({ userId, folderId, onUploaded }) {
         userId,
         folderId,
         caption: "", // Placeholder for now, can be extended to include a caption input
-        lat: null, // Placeholder for geotagging, can be extended to include location data
-        lng: null, // Placeholder for geotagging, can be extended to include location data
+        lat,
+        lng,
         imageUrl: result.imageUrl,
         storagePath: result.storagePath,
       });
@@ -60,7 +74,9 @@ export default function PhotoUploader({ userId, folderId, onUploaded }) {
       // Reset selected file after successful upload
       setFile(null);
 
-      setStatus("Photo uploaded and metadata saved successfully.");
+      setStatus(lat && lng
+        ? "Photo uploaded and location saved successfully."
+        : "Photo uploaded successfully. No GPS data found.");
     } catch (err) {
       setStatus(err.message);
     }
@@ -73,7 +89,7 @@ export default function PhotoUploader({ userId, folderId, onUploaded }) {
       <input
         id="photoFile"
         type="file"
-        accept="image/*"
+        accept=".jpg,.jpeg,image/jpeg"
         onChange={(e) => setFile(e.target.files?.[0] || null)}
       />
 
@@ -91,7 +107,7 @@ export default function PhotoUploader({ userId, folderId, onUploaded }) {
 
       {/* Helper text for the uploader */}
       <p id="upload-help" style={{ fontSize: 12, marginTop: 10 }}>
-        Uploaded files are stored in Firebase Storage.
+        Only JPG/JPEG files are supported.
       </p>
 
       {/* Status message area for upload feedback */}

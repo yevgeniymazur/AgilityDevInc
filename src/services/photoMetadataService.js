@@ -30,6 +30,7 @@ export async function savePhotoMetadata({ userId, folderId, caption, lat, lng, i
             timestamp: Date.now()
         });
         console.log("Photo metadata saved with ID: ", docRef.id);
+        console.log("Saved metadata: ", { userId, folderId, caption, lat, lng, imageUrl, storagePath });
         return docRef.id;
     } catch (e) {
         console.error("Error saving photo metadata: ", e);
