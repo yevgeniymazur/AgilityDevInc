@@ -178,10 +178,6 @@ export default function HomeTabs({
                 setGlobePoints={setGlobePoints}
               />
             </>
-            <PhotoPanel
-              userId={user?.uid}
-              folder={selectedFolder}
-            />
           )}
         </div>
       </div>
