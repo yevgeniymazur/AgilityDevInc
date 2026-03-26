@@ -29,7 +29,7 @@ Wanderloom is a travel journal application that allows users to upload photos, e
 ## Demo
 ![sitedemo](src/assets/site-demo.gif)
 
-[Check it out here!](https://nom-db.netlify.app/)
+[Check it out here!](https://yevgeniymazur.github.io/AgilityDevInc/)
 
 ## Built With
 ![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)
