@@ -15,6 +15,7 @@ PURPOSE
 export default function PhotoUploader({ userId, folderId, onUploaded }) {
   // Stores the selected file before upload
   const [file, setFile] = useState(null);
+  const [caption, setCaption] = useState("");
 
   // Displays upload progress, success, or error messages
   const [status, setStatus] = useState("");
@@ -38,7 +39,7 @@ export default function PhotoUploader({ userId, folderId, onUploaded }) {
     //validate file type. 
     // In future iterations support more formats, implement more security, implement image processing, 
     // and export this logic to a separate service
-    if (!file.name.endsWith(".jpg") && !file.name.endsWith(".jpeg")) {
+    if (!file.name.toLowerCase().endsWith(".jpg") && !file.name.toLowerCase().endsWith(".jpeg")) {
       setStatus("Only JPG/JPEG files are supported.");
       return;
     }
@@ -59,7 +60,7 @@ export default function PhotoUploader({ userId, folderId, onUploaded }) {
       await savePhotoMetadata({
         userId,
         folderId,
-        caption: "", // Placeholder for now, can be extended to include a caption input
+        caption,
         lat,
         lng,
         imageUrl: result.imageUrl,
@@ -71,8 +72,9 @@ export default function PhotoUploader({ userId, folderId, onUploaded }) {
         onUploaded(result);
       }
 
-      // Reset selected file after successful upload
+      // Reset selected file and caption after successful upload
       setFile(null);
+      setCaption("");
 
       setStatus(lat && lng
         ? "Photo uploaded and location saved successfully."
@@ -91,6 +93,18 @@ export default function PhotoUploader({ userId, folderId, onUploaded }) {
         type="file"
         accept=".jpg,.jpeg,image/jpeg"
         onChange={(e) => setFile(e.target.files?.[0] || null)}
+      />
+
+      {/* Caption input */}
+      <label htmlFor="caption">Caption (optional)</label>
+      <input
+        id="caption"
+        type="text"
+        value={caption}
+        onChange={(e) => setCaption(e.target.value)}
+        placeholder="Eiffel Tower at sunset"
+        autoComplete="off"
+        style={{ marginBottom: 10 }}
       />
 
       {/* Upload controls */}

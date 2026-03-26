@@ -1,7 +1,27 @@
+/*
+HomeTabs Component
+
+PURPOSE
+- Controls which content is shown inside the bottom sheet area.
+- Each tab displays a different part of the Wanderloom UI.
+
+TABS
+- Trips   -> folder list and selected trip content
+- Pins    -> placeholder for map pin data
+- Upload  -> standalone upload panel
+- Profile -> signed-in user information and future settings
+
+LAYOUT NOTES
+- The Trips tab uses a two-column layout
+- Folder list stays separate from selected folder content
+- Built to expand later with Firebase and map integration
+*/
+
 import { useEffect, useState } from "react";
 import FolderList from "./FolderList";
 import PhotoPanel from "./PhotoPanel";
 import PhotoUploader from "./PhotoUploader";
+import PinsTab from "./PinsTab";
 import { auth, db, storage } from "../firebase";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
@@ -10,8 +30,15 @@ import { onAuthStateChanged } from "firebase/auth";
 export default function HomeTabs({
   activeTab,
   selectedFolder,
-  setSelectedFolder
+  setSelectedFolder,
+  setGlobePoints
 }) {
+
+  /* =========================
+      TRIPS TAB
+      Shows trip folders on the left
+      and selected trip content on the right
+     ========================= */
 
   // current logged in user
   const [user, setUser] = useState(null);
@@ -111,7 +138,12 @@ export default function HomeTabs({
     setIsEditing(false);
   };
 
-  // TRIPS TAB
+  /* =========================
+     TRIPS TAB
+     Shows trip folders on the left
+     and selected trip content on the right
+     ========================= */
+  
   if (activeTab === "trips") {
     return (
       <div className="grid" style={{ gridTemplateColumns: "360px 1fr", gap: 16 }}>
@@ -130,6 +162,22 @@ export default function HomeTabs({
           {!selectedFolder ? (
             <p>Select a trip</p>
           ) : (
+            <>
+              <h3 style={{ marginTop: 0 }}>
+                {selectedFolder.name}
+              </h3>
+
+              <p style={{ fontSize: 13, color: "var(--muted)" }}>
+                Manage photos and pins for this trip.
+              </p>
+
+              {/* PhotoPanel handles uploads, captions, and coordinates */}
+              <PhotoPanel
+                userId={user?.uid}
+                folder={selectedFolder}
+                setGlobePoints={setGlobePoints}
+              />
+            </>
             <PhotoPanel
               userId={user?.uid}
               folder={selectedFolder}
@@ -140,35 +188,20 @@ export default function HomeTabs({
     );
   }
 
-  // PINS TAB (placeholder)
+  /* =========================
+      PINS TAB
+     ========================= */
+
   if (activeTab === "pins") {
-    return (
-      <div>
-        <h3>Pins</h3>
-        <div className="card">
-          <p>Pin data will show here</p>
-        </div>
-      </div>
-    );
+    return <PinsTab setGlobePoints={setGlobePoints} />;
   }
 
-  // UPLOAD TAB
-  if (activeTab === "upload") {
-    return (
-      <div>
-        <h3>Upload</h3>
-        <div className="card">
-          <PhotoUploader
-            userId={user?.uid}
-            folderId={selectedFolder?.id || "none"}
-            onUploaded={() => {}}
-          />
-        </div>
-      </div>
-    );
-  }
+  
 
-  // PROFILE TAB
+  /* =========================
+     PROFILE TAB
+     Displays signed-in user info and settings
+     ========================= */
   return (
     <div>
       <h3>Profile</h3>

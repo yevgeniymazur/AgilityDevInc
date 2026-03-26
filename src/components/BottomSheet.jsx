@@ -10,7 +10,6 @@ export default function BottomSheet({ activeTab, setActiveTab, children }) {
   const tabs = [
     { id: "trips", label: "Trips" },
     { id: "pins", label: "Pins" },
-    { id: "upload", label: "Upload" },
     { id: "profile", label: "Profile" },
   ];
 
@@ -22,6 +21,7 @@ export default function BottomSheet({ activeTab, setActiveTab, children }) {
     >
       <div className="sheet-inner">
         <div className="card">
+
           {/* Tab navigation bar */}
           <div className="tabbar" role="tablist" aria-label="Home tabs">
             {tabs.map((t) => (

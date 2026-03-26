@@ -7,6 +7,7 @@ import BottomSheet from "../components/BottomSheet";
 import HomeTabs from "../components/HomeTabs";
 
 export default function Home() {
+  
   // Current authenticated user from Firebase
   const user = auth.currentUser;
 
@@ -15,6 +16,8 @@ export default function Home() {
 
   // Tracks which trip folder is selected
   const [selectedFolder, setSelectedFolder] = useState(null);
+
+  const [globePoints, setGlobePoints] = useState([]);
 
   // Controls whether the bottom sheet is open
   const [menuOpen, setMenuOpen] = useState(false);
@@ -29,7 +32,7 @@ export default function Home() {
       {/* Top brand area */}
       <header className="topbar" role="banner">
         <div className="brand-wrap">
-          <h1 className="brand-title">Wanderloom</h1>
+          <h1 className="brand-title">WanderLoom</h1>
           <p className="brand-subtitle">Explore the world through memory</p>
         </div>
 
@@ -50,7 +53,7 @@ export default function Home() {
 
       {/* Main stage keeps the globe as the focal point */}
       <main id="main" className="main-stage" role="main">
-        <GlobePanel />
+        <GlobePanel points={globePoints} />
 
         <div className="dock-area">
           {/* Expanding menu sheet */}
@@ -60,6 +63,7 @@ export default function Home() {
                 activeTab={activeTab}
                 selectedFolder={selectedFolder}
                 setSelectedFolder={setSelectedFolder}
+                setGlobePoints={setGlobePoints}
               />
             </BottomSheet>
           )}
