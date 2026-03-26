@@ -76,7 +76,7 @@ export default function FolderList({ userId, onSelectFolder }) {
   }, []);
 
   return (
-    <aside className="card" aria-label="Trip folders">
+    <>
       <h2>Your Trips</h2>
       <p>Create a folder for each trip (e.g., “Japan 2026”).</p>
 
@@ -143,12 +143,6 @@ export default function FolderList({ userId, onSelectFolder }) {
           ))
         )}
       </div>
-
-      {/* Accessibility reminder for grading/demo purposes */}
-      <p style={{ fontSize: 12, marginTop: 14 }}>
-        <span className="badge">ADA</span>{" "}
-        Buttons are keyboard accessible with visible focus.
-      </p>
-    </aside>
+      </>
   );
 }

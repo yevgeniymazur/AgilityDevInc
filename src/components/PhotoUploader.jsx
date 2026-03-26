@@ -60,7 +60,7 @@ export default function PhotoUploader({ userId, folderId, onUploaded }) {
       await savePhotoMetadata({
         userId,
         folderId,
-        caption: "", // Placeholder for now, can be extended to include a caption input
+        caption,
         lat,
         lng,
         imageUrl: result.imageUrl,

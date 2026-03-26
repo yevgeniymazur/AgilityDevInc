@@ -161,21 +161,6 @@ export default function HomeTabs({
       <p style={{ fontWeight: "bold" }}>
         {user?.email || "Unknown User"}
       </p>
-
-      {/* Future implementation to add Profile settings/data */}
-      {/* <div className="card" style={{ marginTop: 10 }}>
-        <p style={{ marginBottom: 0 }}>
-          <span className="badge">TODO</span>{" "}
-          Future settings:
-        </p>
-
-        <ul style={{ marginTop: 8 }}>
-          <li>Display name</li>
-          <li>Avatar</li>
-          <li>Default map view</li>
-          <li>Privacy settings</li>
-        </ul>
-      </div> */}
     </div>
   );
 }
