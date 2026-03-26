@@ -1,68 +1,106 @@
-<<<<<<< HEAD
-# React + Vite
+<a id="readme-top"></a>
+<!-- 
+README styling provided by https://github.com/othneildrew/Best-README-Template
+ https://readme.so/
+ https://www.markdownguide.org/basic-syntax/
+ -->
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-Currently, two official plugins are available:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+<details>
+  <summary>Table of Contents</summary>
+  <ol>
+    <li><a href="#about-wanderloom">About The Project</a></li>
+    <li><a href="#demo">Demo</a></li>
+    <li><a href="#built-with">Built With</a></li>
+    <li><a href="#local-setup">Local Setup</a></li>
+    <li><a href="#api-reference">API References</a></li>
+    <li><a href="#features">Features</a></li>
+    <li><a href="#limitations">Limitations</a></li>
+    <li><a href="#project-coordination">Project Coordination</a></li>
+    <li><a href="#creators">Creators</a></li>
+  </ol>
+</details>
 
-## React Compiler
+# About WanderLoom 🌏
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Wanderloom is a travel journal application that allows users to upload photos, extract GPS metadata, and revisit travel locations through an interactive map interface. Photos are displayed as location-based markers, enabling users to explore memories in a visual and immersive way. The application supports organizing photos into albums and sharing travel journals with others.
 
-## Expanding the ESLint configuration
+## Demo
+![sitedemo](src/assets/site-demo.gif)
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
-=======
-# Wanderloom
+[Check it out here!](https://nom-db.netlify.app/)
 
-## VR Travel Journal Application
+## Built With
+![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)
+![Vite](https://img.shields.io/badge/vite-9135FF.svg?style=for-the-badge&logo=vite&logoColor=white)
+![NPM](https://img.shields.io/badge/NPM-CB3837.svg?style=for-the-badge&logo=npm&logoColor=white)
+![Firebase](https://img.shields.io/badge/firebase-DD2C00?style=for-the-badge&logo=firebase&logoColor=ffcd34)
+![MapBox](https://img.shields.io/badge/mapbox-000000?style=for-the-badge&logo=mapbox&logoColor=ffffff)
 
-### Team
-AgilityDevInc
 
----
+## Local Setup
 
-## Project Overview
+Clone the project (or download zip of the project)
 
-Wanderloom is a VR travel journal application that allows users to upload photos, extract GPS metadata, and revisit travel locations through an interactive map interface. Photos are displayed as location-based markers, enabling users to explore memories in a visual and immersive way.
+```bash
+  git clone https://github.com/yevgeniymazur/AgilityDevInc.git
+```
 
-If metadata is missing or inaccurate, users can manually adjust location information. The application also supports organizing photos into albums and sharing travel journals with others.
+Go to the project directory
 
----
+```bash
+  cd AgilityDevInc
+```
 
-## Tech Stack (Planned)
+Install dependencies
 
-- Frontend: React (Web Application)
-- Backend: TBD (Node.js / .NET or similar)
-- Database: Firebase
-- External API: Mapbox
+```bash
+  npm install
+```
 
----
+Start the server
 
-## Features (Planned)
+```bash
+  npm run dev
+```
+## API Reference
+### Firebase Documentation
+https://firebase.google.com/docs
 
-- Upload travel photos
-- Automatic GPS metadata extraction
-- Interactive map visualization of photo locations
+### MapBox GL JS Documentation
+https://docs.mapbox.com/mapbox-gl-js/guides/
+
+### Mapbox Styles API
+https://docs.mapbox.com/api/maps/styles/
+
+## Features
+
+- Account creation and authentication
+- Users can create photo albums and store photos into them
+- GPS data is extracted from photo metadata, pinning photos onto an interactive map
+
+### Future Features
 - Manual location editing
 - Album creation and management
 - Photo organization within albums
 - Sharing travel journals
 
----
+## Limitations
 
-## Communication
+* Only accepts JPEG/JPG format at this time. 
+* Cannot edit location data.
+* Lacks security features for photo upload.
 
-- GitHub (version control and project tracking)
-- Microsoft Teams (meetings)
-- Discord (quick communication)
+## Creators 👋
 
----
+- [@yevgeniymazur](https://github.com/yevgeniymazur)
+- [@2shayd](https://github.com/2shayd)
+- [@nthaberl](https://www.github.com/nthaberl)
 
-## Current Phase
+## Project Coordination
 
-Planning & Requirements Definition
->>>>>>> 2a0876c6ad984dbeadb170a256cba3d549c90685
+![GitHub](https://img.shields.io/badge/github-181717.svg?style=for-the-badge&logo=github&logoColor=white)
+![Discord](https://img.shields.io/badge/discord-%23646CFF.svg?style=for-the-badge&logo=discord&logoColor=white)
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
