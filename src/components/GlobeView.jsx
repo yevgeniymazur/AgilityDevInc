@@ -197,7 +197,7 @@ export default function GlobeView({ points = [] }) {
             border: "1px solid var(--border, #333)",
             borderRadius: 12,
             padding: 12,
-            display: "flex",
+            // display: "flex",
             gap: 12,
             alignItems: "center",
             zIndex: 10,
@@ -210,8 +210,8 @@ export default function GlobeView({ points = [] }) {
             <img
               src={popup.imageUrl}
               alt={popup.caption || "Photo"}
-              width="80"
-              height="60"
+              width="180"
+              height="160"
               style={{ objectFit: "cover", borderRadius: 8 }}
             />
           )}
@@ -231,10 +231,8 @@ export default function GlobeView({ points = [] }) {
             type="button"
             onClick={() => setPopup(null)}
             style={{
-              marginLeft: "auto",
               background: "none",
               border: "none",
-              cursor: "pointer",
               fontSize: 16,
               color: "var(--muted, #888)",
             }}

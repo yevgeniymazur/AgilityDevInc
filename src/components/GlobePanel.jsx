@@ -23,9 +23,9 @@ export default function GlobePanel({ points = [] }) {
     <section aria-label="Interactive globe">
       <div className="globe-wrap">
         <div style={{ position: "relative", padding: 16 }}>
-          <h2 style={{ marginBottom: 6 }}>Interactive Globe</h2>
+          <h2 style={{ marginBottom: 6 }}>Interactive World Map</h2>
           <p style={{ maxWidth: 700 }}>
-            Drag to explore Earth from orbit. Pins and photos will appear here.
+            Drag to explore the world map. Pins and photos from current album will appear here.
           </p>
           <GlobeView points={points} />
         </div>

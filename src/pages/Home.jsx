@@ -31,7 +31,7 @@ export default function Home() {
       {/* Top brand area */}
       <header className="topbar" role="banner">
         <div className="brand-wrap">
-          <h1 className="brand-title">Wanderloom</h1>
+          <h1 className="brand-title">WanderLoom</h1>
           <p className="brand-subtitle">Explore the world through memory</p>
         </div>
 

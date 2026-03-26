@@ -211,6 +211,8 @@
 import { useState, useEffect } from "react";
 import PhotoUploader from "./PhotoUploader";
 import { getPhotosByFolder } from "../services/photoMetadataService";
+import { deletePhotoFile } from "../services/photoService";
+import { deletePhotoMetadata } from "../services/photoMetadataService";
 
 /*
 PhotoPanel Component
@@ -258,6 +260,28 @@ export default function PhotoPanel({ userId, folder, setGlobePoints }) {
   function handleUploaded() {
     setFormMsg("Photo uploaded successfully.");
     loadPhotos();
+  }
+
+  /*
+Deletes a photo from Firebase Storage and Firestore,
+then re-fetches the photo list to update the UI and globe pins.
+*/
+  async function handleDelete(photo) {
+    try {
+      // Step 1: Delete file from Firebase Storage
+      await deletePhotoFile({ storagePath: photo.storagePath });
+
+      // Step 2: Delete metadata from Firestore
+      await deletePhotoMetadata({ photoId: photo.id });
+
+      setFormMsg("Photo deleted successfully.");
+
+      // Step 3: Refresh photo list and globe pins
+      loadPhotos();
+    } catch (err) {
+      setFormMsg("Failed to delete photo. Please try again.");
+      console.error("Delete error:", err);
+    }
   }
 
 
@@ -331,6 +355,24 @@ export default function PhotoPanel({ userId, folder, setGlobePoints }) {
                     Lat: {p.lat ?? "—"} | Lng: {p.lng ?? "—"}
                   </div>
                 </div>
+
+                {/* Delete button */}
+                <button
+                  type="button"
+                  onClick={() => handleDelete(p)}
+                  aria-label={`Delete photo ${p.caption || "Untitled photo"}`}
+                  style={{
+                    marginLeft: "auto",
+                    background: "none",
+                    border: "none",
+                    fontSize: 18,
+                    color: "var(--muted)",
+                    padding: "4px 8px",
+                    borderRadius: 4,
+                  }}
+                >
+                  ✕
+                </button>
               </div>
             ))}
           </div>
