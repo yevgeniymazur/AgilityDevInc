@@ -18,18 +18,16 @@
 
 import GlobeView from "./GlobeView";
 
-export default function GlobePanel() {
+export default function GlobePanel({ points = [] }) {
   return (
     <section aria-label="Interactive globe">
       <div className="globe-wrap">
         <div style={{ position: "relative", padding: 16 }}>
           <h2 style={{ marginBottom: 6 }}>Interactive Globe</h2>
-
           <p style={{ maxWidth: 700 }}>
             Drag to explore Earth from orbit. Pins and photos will appear here.
           </p>
-
-          <GlobeView />
+          <GlobeView points={points} />
         </div>
       </div>
     </section>

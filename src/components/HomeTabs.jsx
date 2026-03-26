@@ -25,7 +25,8 @@ LAYOUT NOTES
 export default function HomeTabs({
   activeTab,
   selectedFolder,
-  setSelectedFolder
+  setSelectedFolder,
+  setGlobePoints
 }) {
   // Current logged-in Firebase user
   const user = auth.currentUser;
@@ -96,6 +97,7 @@ export default function HomeTabs({
               <PhotoPanel
                 userId={user?.uid}
                 folder={selectedFolder}
+                setGlobePoints={setGlobePoints}
               />
             </>
           )}

@@ -16,6 +16,8 @@ export default function Home() {
   // Tracks which trip folder is selected
   const [selectedFolder, setSelectedFolder] = useState(null);
 
+  const [globePoints, setGlobePoints] = useState([]);
+
   // Controls whether the bottom sheet is open
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -50,7 +52,7 @@ export default function Home() {
 
       {/* Main stage keeps the globe as the focal point */}
       <main id="main" className="main-stage" role="main">
-        <GlobePanel />
+        <GlobePanel points={globePoints} />
 
         <div className="dock-area">
           {/* Expanding menu sheet */}
@@ -60,6 +62,7 @@ export default function Home() {
                 activeTab={activeTab}
                 selectedFolder={selectedFolder}
                 setSelectedFolder={setSelectedFolder}
+                setGlobePoints={setGlobePoints}
               />
             </BottomSheet>
           )}

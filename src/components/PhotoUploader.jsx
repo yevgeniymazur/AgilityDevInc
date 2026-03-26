@@ -38,7 +38,7 @@ export default function PhotoUploader({ userId, folderId, onUploaded }) {
     //validate file type. 
     // In future iterations support more formats, implement more security, implement image processing, 
     // and export this logic to a separate service
-    if (!file.name.endsWith(".jpg") && !file.name.endsWith(".jpeg")) {
+    if (!file.name.toLowerCase().endsWith(".jpg") && !file.name.toLowerCase().endsWith(".jpeg")) {
       setStatus("Only JPG/JPEG files are supported.");
       return;
     }
