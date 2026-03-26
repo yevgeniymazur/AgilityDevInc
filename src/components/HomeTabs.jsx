@@ -1,6 +1,7 @@
 import FolderList from "./FolderList";
 import PhotoPanel from "./PhotoPanel";
 import PhotoUploader from "./PhotoUploader";
+import PinsTab from "./PinsTab";
 import { auth } from "../firebase";
 
 /*
@@ -32,9 +33,9 @@ export default function HomeTabs({
   const user = auth.currentUser;
 
   /* =========================
-     TRIPS TAB
-     Shows trip folders on the left
-     and selected trip content on the right
+      TRIPS TAB
+      Shows trip folders on the left
+      and selected trip content on the right
      ========================= */
   if (activeTab === "trips") {
     return (
@@ -107,78 +108,47 @@ export default function HomeTabs({
   }
 
   /* =========================
-     PINS TAB
-     Placeholder for future globe pin integration
+      PINS TAB
      ========================= */
+
   if (activeTab === "pins") {
-    return (
-      <div>
-        <h3 style={{ marginTop: 0 }}>Pins</h3>
-
-        <p>
-          Pins represent locations tied to uploaded photos.
-        </p>
-
-        <div className="card" style={{ marginTop: 10 }}>
-          <p style={{ marginBottom: 0 }}>
-            <span className="badge">TODO</span>{" "}
-            Teammate will connect Firestore pin data and display
-            pins on the globe.
-          </p>
-
-          <p style={{ fontSize: 12 }}>
-            Expected data format:
-          </p>
-
-          {/* Example structure for future pin documents */}
-          <pre style={{ fontSize: 12 }}>
-{`{
-  id: string
-  lat: number
-  lng: number
-  caption: string
-  imageUrl: string
-}`}
-          </pre>
-        </div>
-      </div>
-    );
+    return <PinsTab setGlobePoints={setGlobePoints} />;
   }
 
   /* =========================
-     UPLOAD TAB
-     Standalone uploader for quick photo uploads
+      UPLOAD TAB
+      Standalone uploader for quick photo uploads
      ========================= */
-  if (activeTab === "upload") {
-    return (
-      <div>
-        <h3 style={{ marginTop: 0 }}>Upload</h3>
+  // if (activeTab === "upload") {
+  //   return (
+  //     <div>
+  //       <h3 style={{ marginTop: 0 }}>Upload</h3>
 
-        <p>
-          Upload photos for your trips. These can later become
-          globe pins.
-        </p>
+  //       <p>
+  //         Upload photos for your trips. These can later become
+  //         globe pins.
+  //       </p>
 
-        <div className="card" style={{ marginTop: 10 }}>
-          <PhotoUploader
-            userId={user?.uid}
-            folderId={selectedFolder?.id || "no-folder-selected"}
-            onUploaded={() => {}}
-          />
+  //       <div className="card" style={{ marginTop: 10 }}>
+  //         <PhotoUploader
+  //           userId={user?.uid}
+  //           folderId={selectedFolder?.id || "no-folder-selected"}
+  //           onUploaded={() => { }}
+  //         />
 
-          <p style={{ fontSize: 12 }}>
-            <span className="badge">TODO</span>{" "}
-            Replace stub upload with Firebase Storage integration
-            in <code>services/photoService.js</code>.
-          </p>
-        </div>
-      </div>
-    );
-  }
+  //         <p style={{ fontSize: 12 }}>
+  //           <span className="badge">TODO</span>{" "}
+  //           Replace stub upload with Firebase Storage integration
+  //           in <code>services/photoService.js</code>.
+  //         </p>
+  //       </div>
+  //     </div>
+  //   );
+  // }
 
   /* =========================
-     PROFILE TAB
-     Displays signed-in user info and future settings
+      PROFILE TAB
+      Displays signed-in user info and future settings
      ========================= */
   return (
     <div>
@@ -192,7 +162,8 @@ export default function HomeTabs({
         {user?.email || "Unknown User"}
       </p>
 
-      <div className="card" style={{ marginTop: 10 }}>
+      {/* Future implementation to add Profile settings/data */}
+      {/* <div className="card" style={{ marginTop: 10 }}>
         <p style={{ marginBottom: 0 }}>
           <span className="badge">TODO</span>{" "}
           Future settings:
@@ -204,7 +175,7 @@ export default function HomeTabs({
           <li>Default map view</li>
           <li>Privacy settings</li>
         </ul>
-      </div>
+      </div> */}
     </div>
   );
 }

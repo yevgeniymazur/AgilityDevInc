@@ -20,7 +20,7 @@ import GlobeView from "./GlobeView";
 
 export default function GlobePanel({ points = [] }) {
   return (
-    <section aria-label="Interactive globe">
+    <section aria-label="Interactive map showing photo locations">
       <div className="globe-wrap">
         <div style={{ position: "relative", padding: 16 }}>
           <h2 style={{ marginBottom: 6 }}>Interactive World Map</h2>

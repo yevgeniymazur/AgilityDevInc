@@ -22,7 +22,7 @@ export async function savePhotoMetadata({ userId, folderId, caption, lat, lng, i
         const docRef = await addDoc(collection(db, "photos"), {
             userId,
             folderId,
-            caption: caption || "",
+            caption: caption || "", // Default to empty string if caption is not provided
             lat: lat || null,
             lng: lng || null,
             imageUrl,
@@ -53,7 +53,18 @@ export async function getPhotosByFolder({ userId, folderId }) {
     return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
 }
 
-//removing photo information from Firestore
+//removing photo metadata  from Firestore
 export async function deletePhotoMetadata({ photoId }) {
     await deleteDoc(doc(db, "photos", photoId));
+}
+
+//retrieve all photos uploaded by a user, regardless of folder. This will be used to display pins on the globe.
+export async function getPhotosByUser({ userId }) {
+    const q = query(
+        collection(db, "photos"),
+        where("userId", "==", userId)
+    );
+
+    const snap = await getDocs(q);
+    return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
 }

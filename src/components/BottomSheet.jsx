@@ -10,7 +10,7 @@ export default function BottomSheet({ activeTab, setActiveTab, children }) {
   const tabs = [
     { id: "trips", label: "Trips" },
     { id: "pins", label: "Pins" },
-    { id: "upload", label: "Upload" },
+    // { id: "upload", label: "Upload" },
     { id: "profile", label: "Profile" },
   ];
 
