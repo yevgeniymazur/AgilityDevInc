@@ -11,6 +11,9 @@ export default function GlobeView({ points = [] }) {
   // Tracks the currently open popup content
   const [popup, setPopup] = useState(null);
 
+  //track state of expanded photo from popup
+  const [expandedPhoto, setExpandedPhoto] = useState(null);
+
   // Keep pointsRef in sync with latest points prop
   useEffect(() => {
     pointsRef.current = points;
@@ -27,7 +30,7 @@ export default function GlobeView({ points = [] }) {
       style: "mapbox://styles/mapbox/navigation-night-v1",
       showRoadLabels: false,
       center: [0, 20],
-      zoom: 1.5,
+      zoom: 2.0,
     });
 
     map.addControl(new mapboxgl.NavigationControl(), "top-right");
@@ -104,6 +107,7 @@ export default function GlobeView({ points = [] }) {
             boxShadow: "0 4px 20px rgba(0,0,0,0.4)",
           }}
         >
+
           {/* Photo preview */}
           {popup.imageUrl && (
             <img
@@ -111,6 +115,7 @@ export default function GlobeView({ points = [] }) {
               alt={popup.caption || " "}
               width="180"
               height="160"
+              onClick={() => setExpandedPhoto(popup)}
               style={{ objectFit: "cover", borderRadius: 8 }}
             />
           )}
@@ -139,6 +144,41 @@ export default function GlobeView({ points = [] }) {
           >
             ✕
           </button>
+        </div>
+
+      )}
+
+      {expandedPhoto && (
+        <div
+          onClick={() => setExpandedPhoto(null)}
+          style={{
+            position: "fixed",
+            inset: 0,
+            background: "rgba(0,0,0,0.85)",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 100,
+            cursor: "pointer",
+          }}
+        >
+          <img
+            src={expandedPhoto.imageUrl}
+            alt={expandedPhoto.caption || "Photo"}
+            style={{
+              maxWidth: "90vw",
+              maxHeight: "85vh",
+              borderRadius: 12,
+              boxShadow: "0 20px 60px rgba(0,0,0,0.6)",
+              objectFit: "contain",
+            }}
+          />
+          {expandedPhoto.caption && (
+            <p style={{ color: "white", marginTop: 12, fontSize: 14 }}>
+              {expandedPhoto.caption}
+            </p>
+          )}
         </div>
       )}
     </div>

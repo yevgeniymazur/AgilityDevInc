@@ -7,6 +7,7 @@ import BottomSheet from "../components/BottomSheet";
 import HomeTabs from "../components/HomeTabs";
 
 export default function Home() {
+  
   // Current authenticated user from Firebase
   const user = auth.currentUser;
 
