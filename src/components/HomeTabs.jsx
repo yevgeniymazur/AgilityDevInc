@@ -34,12 +34,6 @@ export default function HomeTabs({
   setGlobePoints
 }) {
 
-  /* =========================
-      TRIPS TAB
-      Shows trip folders on the left
-      and selected trip content on the right
-     ========================= */
-
   // current logged in user
   const [user, setUser] = useState(null);
 
@@ -139,11 +133,11 @@ export default function HomeTabs({
   };
 
   /* =========================
-     TRIPS TAB
-     Shows trip folders on the left
-     and selected trip content on the right
+      TRIPS TAB
+      Shows trip folders on the left
+      and selected trip content on the right
      ========================= */
-  
+
   if (activeTab === "trips") {
     return (
       <div className="grid" style={{ gridTemplateColumns: "360px 1fr", gap: 16 }}>
@@ -178,10 +172,6 @@ export default function HomeTabs({
                 setGlobePoints={setGlobePoints}
               />
             </>
-            <PhotoPanel
-              userId={user?.uid}
-              folder={selectedFolder}
-            />
           )}
         </div>
       </div>
@@ -196,7 +186,7 @@ export default function HomeTabs({
     return <PinsTab setGlobePoints={setGlobePoints} />;
   }
 
-  
+
 
   /* =========================
      PROFILE TAB
@@ -217,7 +207,7 @@ export default function HomeTabs({
         {!profile ? (
           <p>Loading profile...</p>
 
-        // VIEW MODE
+          // VIEW MODE
         ) : !isEditing ? (
           <>
             <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
@@ -244,7 +234,7 @@ export default function HomeTabs({
             </button>
           </>
 
-        // EDIT MODE
+          // EDIT MODE
         ) : (
           <>
             <label>Display Name</label>
